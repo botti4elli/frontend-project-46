@@ -11,12 +11,13 @@
   "author": "botti4elli",
   "license": "ISC",
   "dependencies": {
-    "commander": "^10.0.0",
-    "js-yaml": "^4.1.0",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
+    "commander": "^10.0.0",
     "eslint-plugin-import": "^2.31.0",
-    "globals": "^15.14.0"
+    "globals": "^15.14.0",
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "eslint": "^8.57.1",
