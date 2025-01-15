@@ -4,6 +4,8 @@ gendiff:
 install: deps-install
 	npx simple-git-hooks
 
+run:
+	bin/nodejs-package.js 10
 
 deps-install:
 	npm ci --legacy-peer-deps
@@ -19,5 +21,8 @@ test-coverage:
 
 lint:
 	npx eslint .
+
+publish:
+	npm publish
 
 .PHONY: test
