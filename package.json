@@ -13,7 +13,8 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "npx jest"
+    "test": "npx jest",
+    "test-coverage": "jest --coverage --coverageProvider=v8"
   },
   "repository": {
     "type": "git",
