@@ -28,6 +28,7 @@
   "homepage": "https://github.com/hexlet-boilerplates/nodejs-package#readme",
   "dependencies": {
     "debug": "^4.3.5",
+    "js-yaml": "^4.1.0",
     "lodash": "^4.17.21"
   },
   "lint-staged": {

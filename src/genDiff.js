@@ -1,18 +1,5 @@
-import fs from 'fs';
-import path from 'path';
 import _ from 'lodash';
-
-const parseFile = (filePath) => {
-  const absolutePath = path.resolve(process.cwd(), filePath);
-  const extension = path.extname(absolutePath);
-
-  if (extension !== '.json') {
-    throw new Error(`Unsupported file format: ${extension}`);
-  }
-
-  const fileContent = fs.readFileSync(absolutePath, 'utf-8');
-  return JSON.parse(fileContent);
-};
+import parseFile from './parsers.js';
 
 const processKey = (key, file1, file2) => {
   const value1 = file1[key];
