@@ -14,26 +14,23 @@ const parseFile = (filePath) => {
   return JSON.parse(fileContent);
 };
 
-const generateDiff = (keys, file1, file2, index = 0) => {
-  if (index === keys.length) {
-    return '';
-  }
-
-  const key = keys[index];
+const processKey = (key, file1, file2) => {
   const value1 = file1[key];
   const value2 = file2[key];
 
   if (value1 !== undefined && value2 === undefined) {
-    return `  - ${key}: ${value1}\n${generateDiff(keys, file1, file2, index + 1)}`;
+    return `  - ${key}: ${value1}`;
   }
   if (value1 === undefined && value2 !== undefined) {
-    return `  + ${key}: ${value2}\n${generateDiff(keys, file1, file2, index + 1)}`;
+    return `  + ${key}: ${value2}`;
   }
   if (value1 !== value2) {
-    return `  - ${key}: ${value1}\n  + ${key}: ${value2}\n${generateDiff(keys, file1, file2, index + 1)}`;
+    return `  - ${key}: ${value1}\n  + ${key}: ${value2}`;
   }
-  return `    ${key}: ${value1}\n${generateDiff(keys, file1, file2, index + 1)}`;
+  return `    ${key}: ${value1}`;
 };
+
+const generateDiff = (keys, file1, file2) => keys.map((key) => processKey(key, file1, file2)).join('\n');
 
 const genDiff = (filePath1, filePath2) => {
   const file1 = parseFile(filePath1);
@@ -43,7 +40,7 @@ const genDiff = (filePath1, filePath2) => {
 
   const diff = generateDiff(allKeys, file1, file2);
 
-  return `{\n${diff}}`;
+  return `{\n${diff}\n}`;
 };
 
 export default genDiff;
