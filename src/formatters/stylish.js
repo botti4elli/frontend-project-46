@@ -19,7 +19,7 @@ const formatValue = (value, depth) => {
 const formatStylish = (diff, depth = 1) => {
   const lines = diff.map((node) => {
     const indent = getIndent(depth);
-    const currentIndent = getIndent(depth, 2); // Без спецсимволов
+    const currentIndent = getIndent(depth, 2);
 
     switch (node.type) {
       case 'added':

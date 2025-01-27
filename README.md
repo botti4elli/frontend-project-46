@@ -14,6 +14,8 @@
 ### Рекурсивное сравнение
 [![asciicast](https://asciinema.org/a/CrjtbRIsNvwZGYftr4r4vibzp.svg)](https://asciinema.org/a/CrjtbRIsNvwZGYftr4r4vibzp)
 
+### Плоский формат
+[![asciicast](https://asciinema.org/a/SRvwwT1bUOIDXqvnNs7EonjXg.svg)](https://asciinema.org/a/SRvwwT1bUOIDXqvnNs7EonjXg)
 
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/botti4elli/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/botti4elli/frontend-project-46/actions)

@@ -9,8 +9,8 @@ const __dirname = path.dirname(__filename);
 const read = (filePath) => fs.readFileSync(filePath, 'utf-8').trim();
 const getFixturePath = (filename) => path.join(__dirname, '__fixtures__', filename);
 
-describe('gendiff with stylish formatter', () => {
-  const formatName = 'stylish';
+// Функция для тестирования различных форматов
+const runDiffTests = (formatName) => {
   const resultPath = getFixturePath(`${formatName}.output`);
   const expectedResult = read(resultPath);
 
@@ -54,6 +54,14 @@ describe('gendiff with stylish formatter', () => {
 
     expect(received).toEqual(expectedResult);
   });
+};
+
+describe('gendiff with stylish formatter', () => {
+  runDiffTests('stylish');
+});
+
+describe('gendiff with plain formatter', () => {
+  runDiffTests('plain');
 });
 
 test('throws error for unsupported file format', () => {

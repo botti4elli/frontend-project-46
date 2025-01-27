@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import parseFile from './parseFile.js';
 import formatStylish from './formatters/stylish.js';
+import formatPlain from './formatters/plain.js';
 
 const buildDiff = (data1, data2) => {
   const keys = _.sortBy(_.union(Object.keys(data1), Object.keys(data2)));
@@ -36,6 +37,8 @@ const genDiff = (filePath1, filePath2, formatName = 'stylish') => {
       return JSON.stringify(diff, null, 2);
     case 'stylish':
       return formatStylish(diff);
+    case 'plain':
+      return formatPlain(diff);
     default:
       throw new Error(`Unknown format: ${outputFormat}`);
   }
