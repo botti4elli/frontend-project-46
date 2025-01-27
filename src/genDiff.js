@@ -1,33 +1,44 @@
 import _ from 'lodash';
-import parseFile from './parsers.js';
+import parseFile from './parseFile.js';
+import formatStylish from './formatters/stylish.js';
 
-const processKey = (key, file1, file2) => {
-  const value1 = file1[key];
-  const value2 = file2[key];
+const buildDiff = (data1, data2) => {
+  const keys = _.sortBy(_.union(Object.keys(data1), Object.keys(data2)));
 
-  if (value1 !== undefined && value2 === undefined) {
-    return `  - ${key}: ${value1}`;
-  }
-  if (value1 === undefined && value2 !== undefined) {
-    return `  + ${key}: ${value2}`;
-  }
-  if (value1 !== value2) {
-    return `  - ${key}: ${value1}\n  + ${key}: ${value2}`;
-  }
-  return `    ${key}: ${value1}`;
+  return keys.map((key) => {
+    if (!_.has(data2, key)) {
+      return { key, type: 'removed', value: data1[key] };
+    }
+    if (!_.has(data1, key)) {
+      return { key, type: 'added', value: data2[key] };
+    }
+    if (_.isObject(data1[key]) && _.isObject(data2[key])) {
+      return { key, type: 'nested', children: buildDiff(data1[key], data2[key]) };
+    }
+    if (!_.isEqual(data1[key], data2[key])) {
+      return {
+        key, type: 'changed', value1: data1[key], value2: data2[key],
+      };
+    }
+    return { key, type: 'unchanged', value: data1[key] };
+  });
 };
 
-const generateDiff = (keys, file1, file2) => keys.map((key) => processKey(key, file1, file2)).join('\n');
+const genDiff = (filePath1, filePath2, formatName = 'stylish') => {
+  const outputFormat = formatName === 'default' ? 'stylish' : formatName;
 
-const genDiff = (filePath1, filePath2) => {
-  const file1 = parseFile(filePath1);
-  const file2 = parseFile(filePath2);
+  const data1 = parseFile(filePath1);
+  const data2 = parseFile(filePath2);
+  const diff = buildDiff(data1, data2);
 
-  const allKeys = _.sortBy([...new Set([...Object.keys(file1), ...Object.keys(file2)])]);
-
-  const diff = generateDiff(allKeys, file1, file2);
-
-  return `{\n${diff}\n}`;
+  switch (outputFormat) {
+    case 'json':
+      return JSON.stringify(diff, null, 2);
+    case 'stylish':
+      return formatStylish(diff);
+    default:
+      throw new Error(`Unknown format: ${outputFormat}`);
+  }
 };
 
 export default genDiff;

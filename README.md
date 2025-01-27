@@ -11,6 +11,9 @@
 ### Сравнение плоских файлов (yaml)
 [![asciicast](https://asciinema.org/a/u3FcwSx519KNV4F1vPe1akPoW.svg)](https://asciinema.org/a/u3FcwSx519KNV4F1vPe1akPoW)
 
+### Рекурсивное сравнение
+[![asciicast](https://asciinema.org/a/CrjtbRIsNvwZGYftr4r4vibzp.svg)](https://asciinema.org/a/CrjtbRIsNvwZGYftr4r4vibzp)
+
 
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/botti4elli/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/botti4elli/frontend-project-46/actions)
