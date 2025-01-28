@@ -9,7 +9,6 @@ const __dirname = path.dirname(__filename);
 const read = (filePath) => fs.readFileSync(filePath, 'utf-8').trim();
 const getFixturePath = (filename) => path.join(__dirname, '__fixtures__', filename);
 
-// Функция для тестирования различных форматов
 const runDiffTests = (formatName) => {
   const resultPath = getFixturePath(`${formatName}.output`);
   const expectedResult = read(resultPath);
