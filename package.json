@@ -4,7 +4,7 @@
   "description": "Node.js boilerplate package",
   "bin": {
     "nodejs-package": "bin/nodejs-package.js",
-    "gendiff": "./bin/gendiff"
+    "gendiff": "./bin/gendiff.js"
   },
   "simple-git-hooks": {
     "pre-push": "npx lint-staged"

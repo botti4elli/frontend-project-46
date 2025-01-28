@@ -56,11 +56,11 @@ const runDiffTests = (formatName) => {
   });
 };
 
-describe('gendiff with stylish formatter', () => {
+describe('gendiff.js with stylish formatter', () => {
   runDiffTests('stylish');
 });
 
-describe('gendiff with plain formatter', () => {
+describe('gendiff.js with plain formatter', () => {
   runDiffTests('plain');
 });
 
@@ -84,7 +84,7 @@ test('throws error for unknown format', () => {
   expect(() => gendiff(filepath1, filepath2, unknownFormat)).toThrow('Unknown format: unknownFormat');
 });
 
-describe('gendiff with json formatter', () => {
+describe('gendiff.js with json formatter', () => {
   const formatName = 'json';
 
   test('compares JSON files', () => {
