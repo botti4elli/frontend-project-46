@@ -83,3 +83,25 @@ test('throws error for unknown format', () => {
   const unknownFormat = 'unknownFormat';
   expect(() => gendiff(filepath1, filepath2, unknownFormat)).toThrow('Unknown format: unknownFormat');
 });
+
+describe('gendiff with json formatter', () => {
+  const formatName = 'json';
+
+  test('compares JSON files', () => {
+    const filepath1 = getFixturePath('file1.json');
+    const filepath2 = getFixturePath('file2.json');
+    const expectedResult = read(getFixturePath(`${formatName}.output`));
+
+    const received = gendiff(filepath1, filepath2, formatName).trim();
+    expect(received).toEqual(expectedResult);
+  });
+
+  test('compares YAML files', () => {
+    const filepath1 = getFixturePath('file1.yml');
+    const filepath2 = getFixturePath('file2.yml');
+    const expectedResult = read(getFixturePath(`${formatName}.output`));
+
+    const received = gendiff(filepath1, filepath2, formatName).trim();
+    expect(received).toEqual(expectedResult);
+  });
+});
