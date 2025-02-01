@@ -45,14 +45,13 @@ const parseData = (data, format) => {
 
         if (parts.length > 1) {
           const positionInfo = parts[1];
-
           const positionParts = positionInfo.split(' ');
 
           const position = positionParts[1]; // Позиция
           let line = 'unknown line';
           let column = 'unknown column';
 
-          if (positionParts.length > 2) {
+          if (positionParts.length >= 4) {
             line = positionParts[3] || 'unknown line';
             column = positionParts[5] || 'unknown column';
           }
