@@ -31,7 +31,6 @@
 // };
 //
 // export default parseFile;
-
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -47,14 +46,18 @@ const parseData = (data, format) => {
         if (parts.length > 1) {
           const positionInfo = parts[1];
 
-          const positionMatch = positionInfo.match(/position (\d+)(?: \(line (\d+) column (\d+)\))?/);
-          if (positionMatch) {
-            const position = positionMatch[1];
-            const line = positionMatch[2] || 'unknown line';
-            const column = positionMatch[3] || 'unknown column';
+          const positionParts = positionInfo.split(' ');
 
-            throw new Error(`Expected double-quoted property name in JSON at position ${position} (line ${line} column ${column})`);
+          const position = positionParts[1]; // Позиция
+          let line = 'unknown line';
+          let column = 'unknown column';
+
+          if (positionParts.length > 2) {
+            line = positionParts[3] || 'unknown line';
+            column = positionParts[5] || 'unknown column';
           }
+
+          throw new Error(`Expected double-quoted property name in JSON at position ${position} (line ${line} column ${column})`);
         }
 
         throw new Error(`Expected double-quoted property name in JSON at ${error.message}`);
