@@ -47,19 +47,14 @@ const parseData = (data, format) => {
           const positionInfo = parts[1];
           const positionParts = positionInfo.split(' ');
 
-          const position = positionParts[1]; // Позиция
-          let line = 'unknown line';
-          let column = 'unknown column';
-
-          if (positionParts.length >= 4) {
-            line = positionParts[3] || 'unknown line';
-            column = positionParts[5] || 'unknown column';
-          }
+          const position = positionParts[1];
+          const line = positionParts.length >= 4 ? positionParts[3] : 'unknown line';
+          const column = positionParts.length >= 6 ? positionParts[5] : 'unknown column';
 
           throw new Error(`Expected double-quoted property name in JSON at position ${position} (line ${line} column ${column})`);
         }
 
-        throw new Error(`Expected double-quoted property name in JSON at ${error.message}`);
+        throw new Error(`JSON parsing error: ${error.message}`);
       }
     case 'yml':
     case 'yaml':
