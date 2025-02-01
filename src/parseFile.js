@@ -42,8 +42,7 @@ const parseData = (data, format) => {
       try {
         return JSON.parse(data);
       } catch (error) {
-        const message = error.message.split(' at ')[1] || error.message;
-        throw new Error(`Expected double-quoted property name in JSON at ${message}`);
+        throw new Error(`Expected double-quoted property name in JSON at ${error.message.split(' at ')[1]}`);
       }
     case 'yml':
     case 'yaml':
