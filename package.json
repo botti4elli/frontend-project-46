@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "0.0.3",
-  "description": "Node.js boilerplate package",
+  "description": "A Node.js library for comparing configuration files and generating diffs",
   "bin": {
     "nodejs-package": "bin/nodejs-package.js",
     "gendiff": "./bin/gendiff.js"
@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/hexlet-boilerplates/nodejs-package#readme",
   "dependencies": {
+    "commander": "^13.0.0",
     "debug": "^4.3.5",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21"

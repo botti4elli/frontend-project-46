@@ -1,8 +1,6 @@
 import _ from 'lodash';
 import parseFile from './parseFile.js';
-import formatStylish from './formatters/stylish.js';
-import formatPlain from './formatters/plain.js';
-import formatJson from './formatters/json.js';
+import formatDiff from './formatters/formatDiff.js';
 
 const buildDiff = (data1, data2) => {
   const keys = _.sortBy(_.union(Object.keys(data1), Object.keys(data2)));
@@ -26,23 +24,12 @@ const buildDiff = (data1, data2) => {
   });
 };
 
-const genDiff = (filePath1, filePath2, formatName = 'stylish') => {
-  const outputFormat = formatName === 'default' ? 'stylish' : formatName;
-
+const genDiff = (filePath1, filePath2, formatName) => {
   const data1 = parseFile(filePath1);
   const data2 = parseFile(filePath2);
   const diff = buildDiff(data1, data2);
 
-  switch (outputFormat) {
-    case 'json':
-      return formatJson(diff);
-    case 'stylish':
-      return formatStylish(diff);
-    case 'plain':
-      return formatPlain(diff);
-    default:
-      throw new Error(`Unknown format: ${outputFormat}`);
-  }
+  return formatDiff(diff, formatName);
 };
 
 export default genDiff;

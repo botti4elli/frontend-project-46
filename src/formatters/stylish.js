@@ -7,8 +7,8 @@ const formatValue = (value, depth) => {
     return String(value);
   }
 
-  const indent = getIndent(depth + 1); // Отступ для вложенных значений.
-  const closingIndent = getIndent(depth); // Отступ для закрывающей скобки.
+  const indent = getIndent(depth + 1);
+  const closingIndent = getIndent(depth);
 
   const lines = Object.entries(value)
     .map(([key, val]) => `${indent}${key}: ${formatValue(val, depth + 1)}`);
@@ -18,8 +18,8 @@ const formatValue = (value, depth) => {
 
 const formatStylish = (diff, depth = 1) => {
   const lines = diff.map((node) => {
-    const baseIndent = getIndent(depth); // Базовый отступ для текущей строки.
-    const signIndent = getIndent(depth, -2); // Сдвиг для + и -.
+    const baseIndent = getIndent(depth);
+    const signIndent = getIndent(depth, -2);
 
     switch (node.type) {
       case 'added':

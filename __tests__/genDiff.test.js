@@ -9,98 +9,37 @@ const __dirname = path.dirname(__filename);
 const read = (filePath) => fs.readFileSync(filePath, 'utf-8').trim();
 const getFixturePath = (filename) => path.join(__dirname, '__fixtures__', filename);
 
-const runDiffTests = (formatName) => {
-  const resultPath = getFixturePath(`${formatName}.output`);
-  const expectedResult = read(resultPath);
+const formats = [{ formatName: 'stylish' }, { formatName: 'plain' }, { formatName: 'json' }];
+const fileCombinations = [
+  { file1: 'file1.json', file2: 'file2.json' },
+  { file1: 'file1.yml', file2: 'file2.yml' },
+  { file1: 'file1.json', file2: 'file2.yml' },
+];
 
-  test('compares JSON files', () => {
-    const filepath1 = getFixturePath('file1.json');
-    const filepath2 = getFixturePath('file2.json');
+describe.each(formats)('gendiff.js with %s formatter', ({ formatName }) => {
+  test.each(fileCombinations)(
+    'compares $file1 and $file2',
+    ({ file1, file2 }) => {
+      const filepath1 = getFixturePath(file1);
+      const filepath2 = getFixturePath(file2);
+      const expectedResult = read(getFixturePath(`${formatName}.output`));
 
-    const received = gendiff(filepath1, filepath2, formatName).trim();
-    if (received !== expectedResult) {
-      console.log('Received:', received);
-      console.log('Expected:', expectedResult);
-    }
+      const received = gendiff(filepath1, filepath2, formatName).trim();
 
-    expect(received).toEqual(expectedResult);
-  });
-
-  test('compares YAML files', () => {
-    const filepath1 = getFixturePath('file1.yml');
-    const filepath2 = getFixturePath('file2.yml');
-
-    const received = gendiff(filepath1, filepath2, formatName).trim();
-
-    if (received !== expectedResult) {
-      console.log('Received:', received);
-      console.log('Expected:', expectedResult);
-    }
-
-    expect(received).toEqual(expectedResult);
-  });
-
-  test('compares JSON and YAML files', () => {
-    const filepath1 = getFixturePath('file1.json');
-    const filepath2 = getFixturePath('file2.yml');
-
-    const received = gendiff(filepath1, filepath2, formatName).trim();
-
-    if (received !== expectedResult) {
-      console.log('Received:', received);
-      console.log('Expected:', expectedResult);
-    }
-
-    expect(received).toEqual(expectedResult);
-  });
-};
-
-describe('gendiff.js with stylish formatter', () => {
-  runDiffTests('stylish');
+      if (formatName === 'json') {
+        expect(JSON.parse(received)).toEqual(JSON.parse(expectedResult));
+      } else {
+        expect(received).toEqual(expectedResult);
+      }
+    },
+  );
 });
 
-describe('gendiff.js with plain formatter', () => {
-  runDiffTests('plain');
-});
-
-test('throws error for unsupported file format', () => {
-  const filepath = getFixturePath('unsupported.txt');
-  const formatName = 'stylish';
-  expect(() => gendiff(filepath, filepath, formatName)).toThrow('Unsupported file format');
-});
-
-test('throws error for invalid JSON file', () => {
-  const filepath = getFixturePath('invalid.json');
-  const formatName = 'stylish';
-
-  expect(() => gendiff(filepath, filepath, formatName)).toThrow(/Expected ',' or '}' after property value/);
-});
-
-test('throws error for unknown format', () => {
-  const filepath1 = getFixturePath('file1.json');
-  const filepath2 = getFixturePath('file2.json');
-  const unknownFormat = 'unknownFormat';
-  expect(() => gendiff(filepath1, filepath2, unknownFormat)).toThrow('Unknown format: unknownFormat');
-});
-
-describe('gendiff.js with json formatter', () => {
-  const formatName = 'json';
-
-  test('compares JSON files', () => {
-    const filepath1 = getFixturePath('file1.json');
-    const filepath2 = getFixturePath('file2.json');
-    const expectedResult = read(getFixturePath(`${formatName}.output`));
-
-    const received = gendiff(filepath1, filepath2, formatName).trim();
-    expect(received).toEqual(expectedResult);
-  });
-
-  test('compares YAML files', () => {
-    const filepath1 = getFixturePath('file1.yml');
-    const filepath2 = getFixturePath('file2.yml');
-    const expectedResult = read(getFixturePath(`${formatName}.output`));
-
-    const received = gendiff(filepath1, filepath2, formatName).trim();
-    expect(received).toEqual(expectedResult);
-  });
+test.each([
+  { file: 'unsupported.txt', formatName: 'stylish', expectedError: 'Unsupported file format' },
+  { file: 'invalid.json', formatName: 'stylish', expectedError: 'Expected double-quoted property name in JSON at position 347 (line 26 column 1)' },
+  { file: 'file1.json', formatName: 'unknownFormat', expectedError: 'Unknown format: unknownFormat' },
+])('throws error for $file with format $formatName', ({ file, formatName, expectedError }) => {
+  const filepath = getFixturePath(file);
+  expect(() => gendiff(filepath, filepath, formatName)).toThrow(expectedError);
 });
