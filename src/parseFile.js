@@ -45,8 +45,16 @@ const parseData = (data, format) => {
         const parts = error.message.split(' at ');
 
         if (parts.length > 1) {
-          const position = parts[1];
-          throw new Error(`Expected double-quoted property name in JSON at ${position}`);
+          const positionInfo = parts[1];
+
+          const positionMatch = positionInfo.match(/position (\d+)(?: \(line (\d+) column (\d+)\))?/);
+          if (positionMatch) {
+            const position = positionMatch[1];
+            const line = positionMatch[2] || 'unknown line';
+            const column = positionMatch[3] || 'unknown column';
+
+            throw new Error(`Expected double-quoted property name in JSON at position ${position} (line ${line} column ${column})`);
+          }
         }
 
         throw new Error(`Expected double-quoted property name in JSON at ${error.message}`);
