@@ -2,7 +2,7 @@ import { fileURLToPath } from 'url';
 import fs from 'fs';
 import path from 'path';
 import { describe, expect, test } from '@jest/globals';
-import gendiff from '../src/genDiff.js';
+import gendiff, { genDiff } from '../src/genDiff.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,7 +23,8 @@ describe.each(formats)('gendiff.js with %s formatter', ({ formatName }) => {
       const filepath1 = getFixturePath(file1);
       const filepath2 = getFixturePath(file2);
       const expectedResult = read(getFixturePath(`${formatName}.output`));
-
+      // console.log(typeof genDiff);
+      // console.log(genDiff);
       const received = gendiff(filepath1, filepath2, formatName).trim();
 
       if (formatName === 'json') {
