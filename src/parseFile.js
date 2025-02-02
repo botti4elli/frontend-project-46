@@ -7,7 +7,19 @@ const parseData = (data, format) => {
     try {
       return JSON.parse(data);
     } catch (error) {
-      throw new Error(`JSON parse error: ${error.message}`);
+      const { message } = error;
+      const positionIndex = message.indexOf('position ');
+
+      if (positionIndex !== -1) {
+        const position = Number(message.slice(positionIndex + 9).split(' ')[0]);
+        const beforeError = data.slice(0, position);
+        const line = beforeError.split('\n').length;
+        const column = position - beforeError.lastIndexOf('\n');
+
+        throw new Error(`Expected double-quoted property name in JSON at position ${position} (line ${line} column ${column})`);
+      }
+
+      throw new Error(message);
     }
   }
 
