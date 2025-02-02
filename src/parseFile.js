@@ -2,32 +2,34 @@ import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 
+//
+
 const parseData = (data, format) => {
-  switch (format) {
-    case 'json':
-      try {
-        return JSON.parse(data);
-      } catch (error) {
-        const match = error.message.match(/position (\d+)/);
-        if (match) {
-          const position = Number(match[1]);
-          const beforeError = data.slice(0, position);
-          const line = beforeError.split('\n').length;
-          const column = position - beforeError.lastIndexOf('\n');
+  if (format === 'json') {
+    try {
+      return JSON.parse(data);
+    } catch (error) {
+      const { message } = error;
+      const positionIndex = message.indexOf('position ');
 
-          throw new Error(`Expected double-quoted property name in JSON at position ${position} (line ${line} column ${column})`);
-        }
+      if (positionIndex !== -1) {
+        const position = Number(message.slice(positionIndex + 9).split(' ')[0]);
+        const beforeError = data.slice(0, position);
+        const line = beforeError.split('\n').length;
+        const column = position - beforeError.lastIndexOf('\n');
 
-        throw new Error(error.message);
+        throw new Error(`Expected double-quoted property name in JSON at position ${position} (line ${line} column ${column})`);
       }
 
-    case 'yml':
-    case 'yaml':
-      return yaml.load(data, { schema: yaml.DEFAULT_SCHEMA });
-
-    default:
-      throw new Error(`Unsupported file format: ${format}`);
+      throw new Error(message);
+    }
   }
+
+  if (format === 'yml' || format === 'yaml') {
+    return yaml.load(data, { schema: yaml.DEFAULT_SCHEMA });
+  }
+
+  throw new Error(`Unsupported file format: ${format}`);
 };
 
 const readFile = (filePath) => {
