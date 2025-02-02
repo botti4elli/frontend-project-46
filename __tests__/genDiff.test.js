@@ -25,7 +25,7 @@ describe.each(formats)('gendiff.js with %s formatter', ({ formatName }) => {
       const expectedResult = read(getFixturePath(`${formatName}.output`));
       // console.log(typeof genDiff);
       // console.log(genDiff);
-      const received = gendiff(filepath1, filepath2, formatName).trim();
+      const received = genDiff(filepath1, filepath2, formatName).trim();
 
       if (formatName === 'json') {
         expect(JSON.parse(received)).toEqual(JSON.parse(expectedResult));
