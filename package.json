@@ -49,5 +49,5 @@
     "simple-git-hooks": "^2.11.1"
   },
   "type": "module",
-  "main": "index.js"
+  "main": "'../src/genDiff.js'"
 }
