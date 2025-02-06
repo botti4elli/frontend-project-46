@@ -3,7 +3,6 @@
   "version": "0.0.3",
   "description": "A Node.js library for comparing configuration files and generating diffs",
   "bin": {
-    "nodejs-package": "bin/nodejs-package.js",
     "gendiff": "bin/gendiff.js"
   },
   "simple-git-hooks": {

@@ -1,47 +1,42 @@
 import _ from 'lodash';
 
-const getIndent = (depth, extraSpaces = 0) => ' '.repeat(depth * 4 + extraSpaces);
+const getIndent = (depth, prefix = '  ') => ' '.repeat(depth * 4 - 2) + prefix;
 
 const formatValue = (value, depth) => {
-  if (!_.isObject(value)) {
-    return String(value);
-  }
+  if (!_.isObject(value)) return String(value);
 
-  const indent = getIndent(depth + 1);
-  const closingIndent = getIndent(depth);
-
+  const indent = getIndent(depth + 1, '  ');
+  const closingIndent = getIndent(depth, '  ');
   const lines = Object.entries(value)
     .map(([key, val]) => `${indent}${key}: ${formatValue(val, depth + 1)}`);
 
   return `{\n${lines.join('\n')}\n${closingIndent}}`;
 };
 
-const formatStylish = (diff, depth = 1) => {
-  const lines = diff.map((node) => {
-    const baseIndent = getIndent(depth);
-    const signIndent = getIndent(depth, -2);
-
-    switch (node.type) {
+const iter = (diff, depth) => diff
+  .map(({
+    type, key, value, value1, value2, children,
+  }) => {
+    switch (type) {
       case 'added':
-        return `${signIndent}+ ${node.key}: ${formatValue(node.value, depth)}`;
+        return `${getIndent(depth, '+ ')}${key}: ${formatValue(value, depth)}`;
       case 'removed':
-        return `${signIndent}- ${node.key}: ${formatValue(node.value, depth)}`;
+        return `${getIndent(depth, '- ')}${key}: ${formatValue(value, depth)}`;
       case 'unchanged':
-        return `${baseIndent}${node.key}: ${formatValue(node.value, depth)}`;
+        return `${getIndent(depth)}${key}: ${formatValue(value, depth)}`;
       case 'changed':
         return [
-          `${signIndent}- ${node.key}: ${formatValue(node.value1, depth)}`,
-          `${signIndent}+ ${node.key}: ${formatValue(node.value2, depth)}`,
+          `${getIndent(depth, '- ')}${key}: ${formatValue(value1, depth)}`,
+          `${getIndent(depth, '+ ')}${key}: ${formatValue(value2, depth)}`,
         ].join('\n');
       case 'nested':
-        return `${baseIndent}${node.key}: {\n${formatStylish(node.children, depth + 1)}\n${baseIndent}}`;
+        return `${getIndent(depth)}${key}: {\n${iter(children, depth + 1)}\n${getIndent(depth)}}`;
       default:
-        throw new Error(`Unknown type: ${node.type}`);
+        throw new Error(`Unknown type: ${type}`);
     }
-  });
+  })
+  .join('\n');
 
-  const result = lines.join('\n');
-  return depth === 1 ? `{\n${result}\n}` : result;
-};
+const formatStylish = (diff) => `{\n${iter(diff, 1)}\n}`;
 
 export default formatStylish;

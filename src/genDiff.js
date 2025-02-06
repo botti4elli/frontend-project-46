@@ -1,3 +1,4 @@
+import path from 'path';
 import _ from 'lodash';
 import parseFile from './parseFile.js';
 import formatDiff from './formatters/formatDiff.js';
@@ -24,9 +25,12 @@ const buildDiff = (data1, data2) => {
   });
 };
 
-const genDiff = (filePath1, filePath2, formatName) => {
-  const data1 = parseFile(filePath1);
-  const data2 = parseFile(filePath2);
+const genDiff = (filePath1, filePath2, formatName = 'stylish') => {
+  const absolutePath1 = path.resolve(filePath1);
+  const absolutePath2 = path.resolve(filePath2);
+
+  const data1 = parseFile(absolutePath1);
+  const data2 = parseFile(absolutePath2);
   const diff = buildDiff(data1, data2);
 
   return formatDiff(diff, formatName);

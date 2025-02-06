@@ -1,16 +1,11 @@
 import _ from 'lodash';
 
-const formatPlain = (diff) => {
-  const stringifyValue = (value) => {
-    if (_.isObject(value)) {
-      return '[complex value]';
-    }
-    if (typeof value === 'string') {
-      return `'${value}'`;
-    }
-    return `${value}`;
-  };
+const stringifyValue = (value) => {
+  if (_.isObject(value)) return '[complex value]';
+  return typeof value === 'string' ? `'${value}'` : `${value}`;
+};
 
+const formatPlain = (diff) => {
   const iter = (node, path) => node.flatMap((item) => {
     const fullPath = path ? `${path}.${item.key}` : item.key;
     switch (item.type) {
