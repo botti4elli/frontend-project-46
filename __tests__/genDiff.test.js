@@ -17,6 +17,23 @@ const fileCombinations = [
   ['file1.json', 'file2.yml'],
 ];
 
+// describe.each(formats.map((format) => ({ formatName: format })))(
+//   'genDiff with %s format',
+//   ({ formatName }) => {
+//     test.each(fileCombinations)('compares %s and %s', (file1, file2) => {
+//       const filepath1 = getFixturePath(file1);
+//       const filepath2 = getFixturePath(file2);
+//       const expectedResult = read(getFixturePath(`${formatName}.output`));
+//       const received = genDiff(filepath1, filepath2, formatName).trim();
+//
+//       if (formatName === 'json') {
+//         expect(JSON.parse(received)).toEqual(JSON.parse(expectedResult));
+//       } else {
+//         expect(received).toEqual(expectedResult);
+//       }
+//     });
+//   },
+// );
 describe.each(formats.map((format) => ({ formatName: format })))(
   'genDiff with %s format',
   ({ formatName }) => {
@@ -26,11 +43,10 @@ describe.each(formats.map((format) => ({ formatName: format })))(
       const expectedResult = read(getFixturePath(`${formatName}.output`));
       const received = genDiff(filepath1, filepath2, formatName).trim();
 
-      if (formatName === 'json') {
-        expect(JSON.parse(received)).toEqual(JSON.parse(expectedResult));
-      } else {
-        expect(received).toEqual(expectedResult);
-      }
+      const parsedExpected = formatName === 'json' ? JSON.parse(expectedResult) : expectedResult;
+      const parsedReceived = formatName === 'json' ? JSON.parse(received) : received;
+
+      expect(parsedReceived).toEqual(parsedExpected);
     });
   },
 );
